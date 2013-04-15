@@ -33,6 +33,11 @@ enum {
 	ONLINE_MOVABLE,
 };
 
+#ifdef CONFIG_MOVABLE_NODE
+/* Enable/disable SRAT in movablenode boot option */
+extern bool movablenode_enable_srat;
+#endif /* CONFIG_MOVABLE_NODE */
+
 /*
  * pgdat resizing functions
  */
