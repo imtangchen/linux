@@ -1087,6 +1087,31 @@ void __init setup_arch(char **cmdline_p)
 	trim_platform_memory_ranges();
 	trim_low_memory_range();
 
+#ifdef CONFIG_MOVABLE_NODE
+	if (movablenode_enable_srat) {
+		/*
+		 * Memory used by the kernel cannot be hot-removed because Linux cannot
+		 * migrate the kernel pages. When memory hotplug is enabled, we should
+		 * prevent memblock from allocating memory for the kernel.
+		 *
+		 * ACPI SRAT records all hotpluggable memory ranges. But before SRAT is
+		 * parsed, we don't know about it.
+		 *
+		 * The kernel image is loaded into memory at very early time. We cannot
+		 * prevent this anyway. So on NUMA system, we set any node the kernel
+		 * resides in as un-hotpluggable.
+		 *
+		 * Since on modern servers, one node could have double-digit gigabytes
+		 * memory, we can assume the memory around the kernel image is also
+		 * un-hotpluggable. So before SRAT is parsed, just allocate memory near
+		 * the kernel image to try the best to keep the kernel away from
+		 * hotpluggable memory.
+		 */
+		memblock_set_current_order(MEMBLOCK_ORDER_LOW_TO_HIGH);
+		memblock_set_current_limit_low(__pa_symbol(_end));
+	}
+#endif /* CONFIG_MOVABLE_NODE */
+
 	init_mem_mapping();
 
 	early_trap_pf_init();
@@ -1127,6 +1152,18 @@ void __init setup_arch(char **cmdline_p)
 	early_acpi_boot_init();
 
 	initmem_init();
+
+#ifdef CONFIG_MOVABLE_NODE
+	if (movablenode_enable_srat) {
+		/*
+		 * When ACPI SRAT is parsed, which is done in initmem_init(), set
+		 * memblock back to the default behavior.
+		 */
+		memblock_set_current_order(MEMBLOCK_ORDER_DEFAULT);
+		memblock_set_current_limit_low(0);
+	}
+#endif /* CONFIG_MOVABLE_NODE */
+
 	memblock_find_dma_reserve();
 
 #ifdef CONFIG_KVM_GUEST
