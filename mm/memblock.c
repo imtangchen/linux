@@ -989,6 +989,11 @@ void __init_memblock memblock_trim_memory(phys_addr_t align)
 	}
 }
 
+void __init_memblock memblock_set_current_limit_low(phys_addr_t limit)
+{
+	memblock.current_limit_low = limit;
+}
+
 void __init_memblock memblock_set_current_limit_high(phys_addr_t limit)
 {
 	memblock.current_limit_high = limit;

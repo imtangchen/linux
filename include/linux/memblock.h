@@ -174,13 +174,20 @@ static inline void memblock_dump_all(void)
 }
 
 /**
+ * memblock_set_current_limit_low - Set the current allocation lower limit to
+ *                         allow limiting allocations to what is currently
+ *                         accessible during boot
+ * @limit: New lower limit value (physical address)
+ */
+void memblock_set_current_limit_low(phys_addr_t limit);
+
+/**
  * memblock_set_current_limit_high - Set the current allocation upper limit to
  *                         allow limiting allocations to what is currently
  *                         accessible during boot
  * @limit: New upper limit value (physical address)
  */
 void memblock_set_current_limit_high(phys_addr_t limit);
-
 
 /*
  * pfn conversion functions
