@@ -32,6 +32,7 @@ struct memblock memblock __initdata_memblock = {
 	.reserved.cnt		= 1,	/* empty dummy entry */
 	.reserved.max		= INIT_MEMBLOCK_REGIONS,
 
+	.current_limit_low	= 0,
 	.current_limit_high	= MEMBLOCK_ALLOC_ANYWHERE,
 };
 
@@ -84,13 +85,22 @@ static long __init_memblock memblock_overlaps_region(struct memblock_type *type,
 
 /**
  * memblock_find_in_range_node - find free area in given range and node
- * @start: start of candidate range
+ * @start: start of candidate range, can be %MEMBLOCK_ALLOC_ACCESSIBLE
  * @end: end of candidate range, can be %MEMBLOCK_ALLOC_{ANYWHERE|ACCESSIBLE}
  * @size: size of free area to find
  * @align: alignment of free area to find
  * @nid: nid of the free area to find, %MAX_NUMNODES for any node
  *
  * Find @size free area aligned to @align in the specified range and node.
+ *
+ * If @start is %MEMBLOCK_ALLOC_ACCESSIBLE, then set @start to
+ * memblock.current_limit_low which limit the lowest address memblock could
+ * access. %MEMBLOCK_ALLOC_ACCESSIBLE means nothing to @start.
+ *
+ * If @end is %MEMBLOCK_ALLOC_ACCESSIBLE, then set @start to
+ * memblock.current_limit_high which limit the highest address memblock could
+ * access. @end can also be %MEMBLOCK_ALLOC_ANYWHERE, which is the maximum
+ * physical address.
  *
  * RETURNS:
  * Found address on success, %0 on failure.
@@ -102,7 +112,9 @@ phys_addr_t __init_memblock memblock_find_in_range_node(phys_addr_t start,
 	phys_addr_t this_start, this_end, cand;
 	u64 i;
 
-	/* pump up @end */
+	/* pump up @start and @end */
+	if (start == MEMBLOCK_ALLOC_ACCESSIBLE)
+		start = memblock.current_limit_low;
 	if (end == MEMBLOCK_ALLOC_ACCESSIBLE)
 		end = memblock.current_limit_high;
 
@@ -126,7 +138,7 @@ phys_addr_t __init_memblock memblock_find_in_range_node(phys_addr_t start,
 
 /**
  * memblock_find_in_range - find free area in given range
- * @start: start of candidate range
+ * @start: start of candidate range, can be %MEMBLOCK_ALLOC_ACCESSIBLE
  * @end: end of candidate range, can be %MEMBLOCK_ALLOC_{ANYWHERE|ACCESSIBLE}
  * @size: size of free area to find
  * @align: alignment of free area to find
