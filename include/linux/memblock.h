@@ -19,6 +19,11 @@
 
 #define INIT_MEMBLOCK_REGIONS	128
 
+/* Allocation order. */
+#define MEMBLOCK_ORDER_HIGH_TO_LOW	0
+#define MEMBLOCK_ORDER_LOW_TO_HIGH	1
+#define MEMBLOCK_ORDER_DEFAULT		MEMBLOCK_ORDER_HIGH_TO_LOW
+
 struct memblock_region {
 	phys_addr_t base;
 	phys_addr_t size;
@@ -35,6 +40,7 @@ struct memblock_type {
 };
 
 struct memblock {
+	int current_order;	/* allocate from higher or lower address */
 	phys_addr_t current_limit_low;	/* lower boundary of accessable range */
 	phys_addr_t current_limit_high;	/* upper boundary of accessable range */
 	struct memblock_type memory;
@@ -172,6 +178,15 @@ static inline void memblock_dump_all(void)
 	if (memblock_debug)
 		__memblock_dump_all();
 }
+
+/**
+ * memblock_set_current_order - Set the current allocation order to allow
+ *                         allocating memory from higher to lower address or
+ *                         from lower to higher address
+ * @order: In which order to allocate memory. Could be
+ *         MEMBLOCK_ORDER_{HIGH_TO_LOW|LOW_TO_HIGH}
+ */
+void memblock_set_current_order(int order);
 
 /**
  * memblock_set_current_limit_low - Set the current allocation lower limit to

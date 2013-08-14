@@ -32,6 +32,7 @@ struct memblock memblock __initdata_memblock = {
 	.reserved.cnt		= 1,	/* empty dummy entry */
 	.reserved.max		= INIT_MEMBLOCK_REGIONS,
 
+	.current_order		= MEMBLOCK_ORDER_DEFAULT,
 	.current_limit_low	= 0,
 	.current_limit_high	= MEMBLOCK_ALLOC_ANYWHERE,
 };
@@ -987,6 +988,18 @@ void __init_memblock memblock_trim_memory(phys_addr_t align)
 			i--;
 		}
 	}
+}
+
+void __init_memblock memblock_set_current_order(int order)
+{
+	if (order != MEMBLOCK_ORDER_HIGH_TO_LOW &&
+	    order != MEMBLOCK_ORDER_LOW_TO_HIGH) {
+		pr_warn("memblock: Failed to set allocation order. "
+			"Invalid order type: %d\n", order);
+		return;
+	}
+
+	memblock.current_order = order;
 }
 
 void __init_memblock memblock_set_current_limit_low(phys_addr_t limit)
