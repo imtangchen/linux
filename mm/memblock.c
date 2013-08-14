@@ -32,7 +32,7 @@ struct memblock memblock __initdata_memblock = {
 	.reserved.cnt		= 1,	/* empty dummy entry */
 	.reserved.max		= INIT_MEMBLOCK_REGIONS,
 
-	.current_limit		= MEMBLOCK_ALLOC_ANYWHERE,
+	.current_limit_high	= MEMBLOCK_ALLOC_ANYWHERE,
 };
 
 int memblock_debug __initdata_memblock;
@@ -104,7 +104,7 @@ phys_addr_t __init_memblock memblock_find_in_range_node(phys_addr_t start,
 
 	/* pump up @end */
 	if (end == MEMBLOCK_ALLOC_ACCESSIBLE)
-		end = memblock.current_limit;
+		end = memblock.current_limit_high;
 
 	/* avoid allocating the first page */
 	start = max_t(phys_addr_t, start, PAGE_SIZE);
@@ -240,11 +240,11 @@ static int __init_memblock memblock_double_array(struct memblock_type *type,
 			new_area_start = new_area_size = 0;
 
 		addr = memblock_find_in_range(new_area_start + new_area_size,
-						memblock.current_limit,
+						memblock.current_limit_high,
 						new_alloc_size, PAGE_SIZE);
 		if (!addr && new_area_size)
 			addr = memblock_find_in_range(0,
-				min(new_area_start, memblock.current_limit),
+				min(new_area_start, memblock.current_limit_high),
 				new_alloc_size, PAGE_SIZE);
 
 		new_array = addr ? __va(addr) : NULL;
@@ -979,7 +979,7 @@ void __init_memblock memblock_trim_memory(phys_addr_t align)
 
 void __init_memblock memblock_set_current_limit(phys_addr_t limit)
 {
-	memblock.current_limit = limit;
+	memblock.current_limit_high = limit;
 }
 
 static void __init_memblock memblock_dump(struct memblock_type *type, char *name)

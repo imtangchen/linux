@@ -35,7 +35,7 @@ struct memblock_type {
 };
 
 struct memblock {
-	phys_addr_t current_limit;
+	phys_addr_t current_limit_high;	/* upper boundary of accessable range */
 	struct memblock_type memory;
 	struct memblock_type reserved;
 };
