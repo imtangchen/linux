@@ -230,7 +230,7 @@ void __init adjust_total_lowmem(void)
 	pr_cont("%lu Mb, residual: %dMb\n", tlbcam_sz(tlbcam_index - 1) >> 20,
 	        (unsigned int)((total_lowmem - __max_low_memory) >> 20));
 
-	memblock_set_current_limit(memstart_addr + __max_low_memory);
+	memblock_set_current_limit_high(memstart_addr + __max_low_memory);
 }
 
 void setup_initial_memory_limit(phys_addr_t first_memblock_base,
@@ -239,6 +239,6 @@ void setup_initial_memory_limit(phys_addr_t first_memblock_base,
 	phys_addr_t limit = first_memblock_base + first_memblock_size;
 
 	/* 64M mapped initially according to head_fsl_booke.S */
-	memblock_set_current_limit(min_t(u64, limit, 0x04000000));
+	memblock_set_current_limit_high(min_t(u64, limit, 0x04000000));
 }
 #endif

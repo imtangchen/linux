@@ -1114,7 +1114,7 @@ void __init sanity_check_meminfo(void)
 	if (!memblock_limit)
 		memblock_limit = arm_lowmem_limit;
 
-	memblock_set_current_limit(memblock_limit);
+	memblock_set_current_limit_high(memblock_limit);
 }
 
 static inline void prepare_page_table(void)

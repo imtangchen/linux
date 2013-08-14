@@ -287,7 +287,7 @@ static void __init sanity_check_meminfo(void)
 	int i, j;
 
 	lowmem_limit = __pa(vmalloc_min - 1) + 1;
-	memblock_set_current_limit(lowmem_limit);
+	memblock_set_current_limit_high(lowmem_limit);
 
 	for (i = 0, j = 0; i < meminfo.nr_banks; i++) {
 		struct membank *bank = &meminfo.bank[j];

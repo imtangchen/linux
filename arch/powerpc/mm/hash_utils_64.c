@@ -759,7 +759,7 @@ static void __init htab_initialize(void)
 		BUG_ON(htab_bolt_mapping(base, base + size, __pa(base),
 				prot, mmu_linear_psize, mmu_kernel_ssize));
 	}
-	memblock_set_current_limit(MEMBLOCK_ALLOC_ANYWHERE);
+	memblock_set_current_limit_high(MEMBLOCK_ALLOC_ANYWHERE);
 
 	/*
 	 * If we have a memory_limit and we've allocated TCEs then we need to
@@ -1432,5 +1432,5 @@ void setup_initial_memory_limit(phys_addr_t first_memblock_base,
 	ppc64_rma_size = min_t(u64, first_memblock_size, 0x40000000);
 
 	/* Finally limit subsequent allocations */
-	memblock_set_current_limit(ppc64_rma_size);
+	memblock_set_current_limit_high(ppc64_rma_size);
 }

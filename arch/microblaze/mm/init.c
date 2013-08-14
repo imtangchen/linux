@@ -391,7 +391,7 @@ asmlinkage void __init mmu_init(void)
 	/* Shortly after that, the entire linear mapping will be available */
 	/* This will also cause that unflatten device tree will be allocated
 	 * inside 768MB limit */
-	memblock_set_current_limit(memory_start + lowmem_size - 1);
+	memblock_set_current_limit_high(memory_start + lowmem_size - 1);
 }
 
 /* This is only called until mem_init is done. */

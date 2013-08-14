@@ -305,7 +305,7 @@ static void __init map_mem(void)
 	 * The initial direct kernel mapping, located at swapper_pg_dir,
 	 * gives us PGDIR_SIZE memory starting from PHYS_OFFSET (aligned).
 	 */
-	memblock_set_current_limit((PHYS_OFFSET & PGDIR_MASK) + PGDIR_SIZE);
+	memblock_set_current_limit_high((PHYS_OFFSET & PGDIR_MASK) + PGDIR_SIZE);
 
 	/* map all the memory banks */
 	for_each_memblock(memory, reg) {
@@ -319,7 +319,7 @@ static void __init map_mem(void)
 	}
 
 	/* Limit no longer required. */
-	memblock_set_current_limit(MEMBLOCK_ALLOC_ANYWHERE);
+	memblock_set_current_limit_high(MEMBLOCK_ALLOC_ANYWHERE);
 }
 
 /*

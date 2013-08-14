@@ -192,7 +192,7 @@ void __init MMU_init(void)
 #endif
 
 	/* Shortly after that, the entire linear mapping will be available */
-	memblock_set_current_limit(lowmem_end_addr);
+	memblock_set_current_limit_high(lowmem_end_addr);
 }
 
 /* This is only called until mem_init is done. */
@@ -214,6 +214,6 @@ void setup_initial_memory_limit(phys_addr_t first_memblock_base,
 	BUG_ON(first_memblock_base != 0);
 
 	/* 8xx can only access 8MB at the moment */
-	memblock_set_current_limit(min_t(u64, first_memblock_size, 0x00800000));
+	memblock_set_current_limit_high(min_t(u64, first_memblock_size, 0x00800000));
 }
 #endif /* CONFIG_8xx */

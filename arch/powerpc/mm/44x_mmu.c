@@ -225,7 +225,7 @@ void setup_initial_memory_limit(phys_addr_t first_memblock_base,
 
 	/* 44x has a 256M TLB entry pinned at boot */
 	size = (min_t(u64, first_memblock_size, PPC_PIN_SIZE));
-	memblock_set_current_limit(first_memblock_base + size);
+	memblock_set_current_limit_high(first_memblock_base + size);
 }
 
 #ifdef CONFIG_SMP

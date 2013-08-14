@@ -640,7 +640,7 @@ static void __early_init_mmu(int boot_cpu)
 	 */
 	mb();
 
-	memblock_set_current_limit(linear_map_top);
+	memblock_set_current_limit_high(linear_map_top);
 }
 
 void __init early_init_mmu(void)
@@ -680,7 +680,7 @@ void setup_initial_memory_limit(phys_addr_t first_memblock_base,
 		ppc64_rma_size = min_t(u64, first_memblock_size, 0x40000000);
 
 	/* Finally limit subsequent allocations */
-	memblock_set_current_limit(first_memblock_base + ppc64_rma_size);
+	memblock_set_current_limit_high(first_memblock_base + ppc64_rma_size);
 }
 #else /* ! CONFIG_PPC64 */
 void __init early_init_mmu(void)
