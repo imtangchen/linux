@@ -24,6 +24,15 @@ static unsigned long __initdata pgt_buf_start;
 static unsigned long __initdata pgt_buf_end;
 static unsigned long __initdata pgt_buf_top;
 
+/*
+ * max_pfn_mapped:     highest direct mapped pfn
+ * min_pfn_mapped:     lowest direct mapped pfn
+ *
+ * The direct mapping only covers E820_RAM regions, so the ranges and gaps are
+ * represented by pfn_mapped
+ */
+
+unsigned long max_pfn_mapped;
 static unsigned long min_pfn_mapped;
 
 static bool __initdata can_use_brk_pgt = true;
